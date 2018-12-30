@@ -627,8 +627,14 @@ void pilotfile::plr_read_settings()
 	// input options
 	Use_mouse_to_fly = handler->readInt("use_mouse_to_fly");
 	Mouse_sensitivity = handler->readInt("mouse_sensitivity");
-	Joy_sensitivity = handler->readInt("joy_sensitivity");
-	Joy_dead_zone_size = handler->readInt("joy_dead_zone_size");
+	if (!Using_in_game_options) {
+		Joy_sensitivity = handler->readInt("joy_sensitivity");
+		Joy_dead_zone_size = handler->readInt("joy_dead_zone_size");
+	} else {
+		// The values are set by the in-game menu but we still need to read the int from the file to maintain the correct offset
+		handler->readInt("joy_sensitivity");
+		handler->readInt("joy_dead_zone_size");
+	}
 
 	// detail
 	Detail.setting = handler->readInt("setting");

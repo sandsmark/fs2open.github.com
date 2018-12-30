@@ -1110,8 +1110,14 @@ void pilotfile::csg_read_settings()
 	// input options
 	Use_mouse_to_fly = cfread_int(cfp);
 	Mouse_sensitivity = cfread_int(cfp);
-	Joy_sensitivity = cfread_int(cfp);
-	Joy_dead_zone_size = cfread_int(cfp);
+	if (!Using_in_game_options) {
+		Joy_sensitivity = cfread_int(cfp);
+		Joy_dead_zone_size = cfread_int(cfp);
+	} else {
+		// The values are set by the in-game menu but we still need to read the int from the file to maintain the correct offset
+		cfread_int(cfp);
+		cfread_int(cfp);
+	}
 
 	if (csg_ver < 3) {
 		// detail

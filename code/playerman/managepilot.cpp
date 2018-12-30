@@ -105,8 +105,11 @@ void init_new_pilot(player *p, int reset)
 		mprintf(( "Setting detail level to %d because of new pilot\n", cur_speed ));
 		Use_mouse_to_fly = 1;
 		Mouse_sensitivity = 4;
-		Joy_sensitivity = 9;
-		Joy_dead_zone_size = 10;
+		if (!Using_in_game_options) {
+			// This is handled by the in game options in this case
+			Joy_sensitivity = 9;
+			Joy_dead_zone_size = 10;
+		}
 
 		Master_sound_volume = Default_sound_volume;
 		Master_event_music_volume = Default_music_volume;

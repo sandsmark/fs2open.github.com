@@ -87,11 +87,10 @@ const int32_t LE_VM_CENTERING                = 76;
 const int32_t LE_MESSAGE_PRIORITY_LOW        = 71;
 const int32_t LE_MESSAGE_PRIORITY_NORMAL     = 72;
 const int32_t LE_MESSAGE_PRIORITY_HIGH       = 73;
-const int32_t LE_OPTION_TYPE_SELECTION       = 77;
-const int32_t LE_OPTION_TYPE_RANGE           = 78;
+const int32_t LE_OPTION_TYPE_SELECTION       = 78;
+const int32_t LE_OPTION_TYPE_RANGE           = 79;
 
-const int ENUM_NEXT_INDEX = 79; // <<<<<<<<<<<<<<<<<<<<<<
-
+const int ENUM_NEXT_INDEX = 80; // <<<<<<<<<<<<<<<<<<<<<<
 extern flag_def_list Enumerations[];
 extern size_t Num_enumerations;
 
