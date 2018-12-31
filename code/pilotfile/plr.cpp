@@ -606,20 +606,21 @@ void pilotfile::plr_write_controls()
 void pilotfile::plr_read_settings()
 {
 	// sound/voice/music
-	Master_sound_volume = handler->readFloat("master_sound_volume");
-	Master_event_music_volume = handler->readFloat("master_event_music_volume");
-	Master_voice_volume = handler->readFloat("aster_voice_volume");
+	if (!Using_in_game_options) {
+		snd_set_effects_volume(handler->readFloat("master_sound_volume"));
+		event_music_set_volume(handler->readFloat("master_event_music_volume"));
+		snd_set_voice_volume(handler->readFloat("aster_voice_volume"));
 
-	audiostream_set_volume_all(Master_voice_volume, ASF_VOICE);
-	audiostream_set_volume_all(Master_event_music_volume, ASF_EVENTMUSIC);
-
-	if (Master_event_music_volume > 0.0f) {
-		Event_music_enabled = 1;
+		Briefing_voice_enabled = handler->readInt("briefing_voice_enabled") != 0;
 	} else {
-		Event_music_enabled = 0;
-	}
+		// The values are set by the in-game menu but we still need to read the int from the file to maintain the
+		// correct offset
+		handler->readFloat("master_sound_volume");
+		handler->readFloat("master_event_music_volume");
+		handler->readFloat("aster_voice_volume");
 
-	Briefing_voice_enabled = handler->readInt("briefing_voice_enabled");
+		handler->readInt("briefing_voice_enabled");
+	}
 
 	// skill level
 	Game_skill_level = handler->readInt("game_skill_level");
@@ -660,7 +661,7 @@ void pilotfile::plr_write_settings()
 	handler->writeFloat("master_event_music_volume", Master_event_music_volume);
 	handler->writeFloat("aster_voice_volume", Master_voice_volume);
 
-	handler->writeInt("briefing_voice_enabled", Briefing_voice_enabled);
+	handler->writeInt("briefing_voice_enabled", Briefing_voice_enabled ? 1 : 0);
 
 	// skill level
 	handler->writeInt("game_skill_level", Game_skill_level);

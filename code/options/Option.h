@@ -81,6 +81,8 @@ class OptionBase {
 
 	void setPreset(PresetKind preset, const SCP_string& value);
 
+	bool persistChanges() const;
+
 	virtual bool valueChanged(const json_t* val) const = 0;
 
 	virtual ValueDescription getCurrentValueDescription() const = 0;

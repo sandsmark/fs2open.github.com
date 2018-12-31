@@ -167,5 +167,6 @@ const flagset<OptionFlags>& OptionBase::getFlags() const {
 void OptionBase::setFlags(const flagset<OptionFlags>& flags) {
 	_flags = flags;
 }
+bool OptionBase::persistChanges() const { return _parent->persistOptionChanges(this); }
 
 } // namespace options

@@ -240,6 +240,19 @@ ADE_FUNC(getValidValues, l_Option, nullptr,
 
 	return ade_set_args(L, "t", &table);
 }
+ADE_FUNC(persistChanges, l_Option, nullptr,
+         "Immediately persists any changes made to this specific option.", "boolean",
+         "true if the change was applied successfully, false otherwise. nil on error.")
+{
+	option_h* opt;
+	if (!ade_get_args(L, "o", l_Option.GetPtr(&opt))) {
+		return ADE_RETURN_NIL;
+	}
+	if (!opt->isValid()) {
+		return ADE_RETURN_NIL;
+	}
+	return ade_set_args(L, "b", opt->get()->persistChanges());
+}
 
 } // namespace api
 } // namespace scripting

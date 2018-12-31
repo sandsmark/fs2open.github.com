@@ -235,7 +235,7 @@ static float Backup_sound_volume;
 static float Backup_music_volume;
 static float Backup_voice_volume;
 
-static int Backup_briefing_voice_enabled;
+static bool Backup_briefing_voice_enabled;
 static int Backup_use_mouse_to_fly;
 
 static int Sound_volume_int;
@@ -644,29 +644,11 @@ void options_change_tab(int n)
 	gamesnd_play_iface(InterfaceSounds::SCREEN_MODE_PRESSED);
 }
 
-void set_sound_volume()
-{
-	main_hall_reset_ambient_vol();
-}
-
-void set_music_volume()
-{
-	event_music_set_volume_all(Master_event_music_volume);
-}
-
-void set_voice_volume()
-{
-	audiostream_set_volume_all(Master_voice_volume, ASF_VOICE);
-}
-
 void options_cancel_exit()
 {
-	Master_sound_volume = Backup_sound_volume;
-	set_sound_volume();
-	Master_event_music_volume = Backup_music_volume;
-	set_music_volume();
-	Master_voice_volume = Backup_voice_volume;
-	set_voice_volume();
+	snd_set_effects_volume(Backup_sound_volume);
+	event_music_set_volume(Backup_music_volume);
+	snd_set_voice_volume(Backup_voice_volume);
 
 	if(!(Game_mode & GM_MULTIPLAYER)){
 		Game_skill_level = Backup_skill_level;
@@ -813,12 +795,12 @@ void options_button_pressed(int n)
 			break;
 
 		case BRIEF_VOICE_ON:
-			Briefing_voice_enabled = 1;
+			Briefing_voice_enabled = true;
 			gamesnd_play_iface(InterfaceSounds::USER_SELECT);
 			break;
 
 		case BRIEF_VOICE_OFF:
-			Briefing_voice_enabled = 0;
+			Briefing_voice_enabled = false;
 			gamesnd_play_iface(InterfaceSounds::USER_SELECT);
 			break;
 
@@ -839,28 +821,22 @@ void options_sliders_update()
 	// sound slider
 	if (Options_sliders[gr_screen.res][OPT_SOUND_VOLUME_SLIDER].slider.pos != Sound_volume_int) {
 		Sound_volume_int = Options_sliders[gr_screen.res][OPT_SOUND_VOLUME_SLIDER].slider.pos;
-		Master_sound_volume = ((float) (Sound_volume_int) / 9.0f);
-		set_sound_volume();
+		snd_set_effects_volume((float) (Sound_volume_int) / 9.0f);
 		gamesnd_play_iface(InterfaceSounds::USER_SELECT);
 	}
 
 	// music slider
 	if (Options_sliders[gr_screen.res][OPT_MUSIC_VOLUME_SLIDER].slider.pos != Music_volume_int) {
 		Music_volume_int = Options_sliders[gr_screen.res][OPT_MUSIC_VOLUME_SLIDER].slider.pos;
-		Master_event_music_volume = ((float) (Music_volume_int) / 9.0f);
-		if (Master_event_music_volume > 0.0f) {
-			event_music_enable();
-		}
+		event_music_set_volume((float) (Music_volume_int) / 9.0f);
 
-		set_music_volume();
 		gamesnd_play_iface(InterfaceSounds::USER_SELECT);
 	}
 
 	// voice slider
 	if (Options_sliders[gr_screen.res][OPT_VOICE_VOLUME_SLIDER].slider.pos != Voice_volume_int) {
 		Voice_volume_int = Options_sliders[gr_screen.res][OPT_VOICE_VOLUME_SLIDER].slider.pos;
-		Master_voice_volume = ((float) (Voice_volume_int) / 9.0f);
-		set_voice_volume();
+		snd_set_voice_volume((float) (Voice_volume_int) / 9.0f);
 		options_play_voice_clip();
 	}
 
