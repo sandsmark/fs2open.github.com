@@ -236,7 +236,7 @@ static float Backup_music_volume;
 static float Backup_voice_volume;
 
 static bool Backup_briefing_voice_enabled;
-static int Backup_use_mouse_to_fly;
+static bool Backup_use_mouse_to_fly;
 
 static int Sound_volume_int;
 static int Music_volume_int;
