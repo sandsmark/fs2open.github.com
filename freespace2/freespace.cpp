@@ -27,9 +27,11 @@
  #include <sys/stat.h>
 #endif
 
+#include "SDLGraphicsOperations.h"
 #include "freespace.h"
 #include "freespaceresource.h"
 #include "levelpaging.h"
+
 #include "anim/animplay.h"
 #include "asteroid/asteroid.h"
 #include "autopilot/autopilot.h"
@@ -134,6 +136,7 @@
 #include "object/objectsnd.h"
 #include "object/waypoint.h"
 #include "observer/observer.h"
+#include "options/Option.h"
 #include "options/OptionsManager.h"
 #include "osapi/osapi.h"
 #include "osapi/osregistry.h"
@@ -180,13 +183,11 @@
 #include "weapon/shockwave.h"
 #include "weapon/weapon.h"
 
-#include "SDLGraphicsOperations.h"
-
-#include <cinttypes>
-
-#include <stdexcept>
 #include <SDL.h>
 #include <SDL_main.h>
+
+#include <cinttypes>
+#include <stdexcept>
 
 extern int Om_tracker_flag; // needed for FS2OpenPXO config
 
@@ -245,6 +246,22 @@ typedef struct big_expl_flash {
 
 #define DEFAULT_SKILL_LEVEL	1
 int	Game_skill_level = DEFAULT_SKILL_LEVEL;
+
+static SCP_string skill_level_display(int value)
+{
+	return SCP_string(Skill_level_names(value, true));
+}
+
+static auto GameSkillOption =
+    options::OptionBuilder<int>("Game.SkillLevel", "Skill Level", "The skill level for the game.")
+        .category("Game")
+        .range(0, 4)
+        .level(options::ExpertLevel::Beginner)
+        .default_val(DEFAULT_SKILL_LEVEL)
+        .bind_to(&Game_skill_level)
+        .display(skill_level_display)
+        .importance(1)
+        .finish();
 
 #define EXE_FNAME			("fs2.exe")
 
