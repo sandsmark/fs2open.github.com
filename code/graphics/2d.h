@@ -46,10 +46,10 @@ FLAG_LIST(FramebufferEffects){Thrusters = 0, Shockwaves, NUM_VALUES};
 extern flagset<FramebufferEffects> Gr_framebuffer_effects;
 
 enum class AntiAliasMode {
-	None,
-	FXAA_Low,
-	FXAA_Medium,
-	FXAA_High
+	None = 0,
+	FXAA_Low = 1,
+	FXAA_Medium = 2,
+	FXAA_High = 3
 };
 extern AntiAliasMode Gr_aa_mode;
 extern AntiAliasMode Gr_aa_mode_last_frame;
