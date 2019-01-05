@@ -251,8 +251,6 @@ char Options_notify_string[200];
 void options_accept();
 void options_force_button_frame(int n, int frame_num);
 
-extern float FreeSpace_gamma;
-
 void options_add_notify(const char *str);
 void options_notify_do_frame();
 
@@ -668,21 +666,21 @@ void options_change_gamma(float delta)
 {
 	char tmp_gamma_string[32];
 
-	FreeSpace_gamma += delta;
-	if (FreeSpace_gamma < 0.1f) {
-		FreeSpace_gamma = 0.1f;
+	auto gamma = Gr_gamma + delta;
+	if (gamma < 0.1f) {
+		gamma = 0.1f;
 		gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
 
-	} else if (FreeSpace_gamma > 5.0f) {
-		FreeSpace_gamma = 5.0f;
+	} else if (gamma > 5.0f) {
+		gamma = 5.0f;
 		gamesnd_play_iface(InterfaceSounds::GENERAL_FAIL);
 
 	} else {
 		gamesnd_play_iface(InterfaceSounds::USER_SELECT);
 	}
 
-	gr_set_gamma(FreeSpace_gamma);
-	sprintf(tmp_gamma_string, NOX("%.2f"), FreeSpace_gamma);
+	gr_set_gamma(gamma);
+	sprintf(tmp_gamma_string, NOX("%.2f"), gamma);
 
 	os_config_write_string( NULL, NOX("GammaD3D"), tmp_gamma_string );
 }
@@ -1055,7 +1053,7 @@ void draw_gamma_box()
 //	ushort Gamma_data[Options_gamma_coords[gr_screen.res][OPTIONS_W_COORD]*Options_gamma_coords[gr_screen.res][OPTIONS_H_COORD]*2];
 	ushort Gamma_data[MAX_GAMMA_BITMAP_SIZE];
 
-	v = fl2i( pow(0.5f, 1.0f / FreeSpace_gamma) * 255.0f );
+	v = fl2i( pow(0.5f, 1.0f / Gr_gamma) * 255.0f );
 	if (v > 255){
 		v = 255;
 	} else if (v < 0){
@@ -1261,7 +1259,7 @@ void options_menu_do_frame(float  /*frametime*/)
 		x = Options_gamma_num_coords[gr_screen.res][OPTIONS_X_COORD];
 		y = Options_gamma_num_coords[gr_screen.res][OPTIONS_Y_COORD];
 
-		gr_printf_menu(x, y, NOX("%.2f"), FreeSpace_gamma);
+		gr_printf_menu(x, y, NOX("%.2f"), Gr_gamma);
 	}
 	//==============================================================================
 

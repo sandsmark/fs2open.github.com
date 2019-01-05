@@ -1658,37 +1658,6 @@ DCF(force_fullscreen, "Forces game to startup in fullscreen mode")
 
 int	Framerate_delay = 0;
 
-float FreeSpace_gamma = 1.0f;
-
-DCF(gamma,"Sets and saves Gamma Factor")
-{
-	if (dc_optional_string_either("help", "--help")) {
-		dc_printf( "Usage: gamma <float>\n" );
-		dc_printf( "Sets gamma in range 1-3, no argument resets to default 1.2\n" );
-		return;
-	}
-
-	if (dc_optional_string_either("status", "--status") || dc_optional_string_either("?", "--?")) {
-		dc_printf( "Gamma = %.2f\n", FreeSpace_gamma );
-		return;
-	}
-
-	if (!dc_maybe_stuff_float(&FreeSpace_gamma)) {
-		dc_printf( "Gamma reset to 1.0f\n" );
-		FreeSpace_gamma = 1.0f;
-	}
-	if ( FreeSpace_gamma < 0.1f )	{
-		FreeSpace_gamma = 0.1f;
-	} else if ( FreeSpace_gamma > 5.0f )	{
-		FreeSpace_gamma = 5.0f;
-	}
-	gr_set_gamma(FreeSpace_gamma);
-
-	char tmp_gamma_string[32];
-	sprintf( tmp_gamma_string, NOX("%.2f"), FreeSpace_gamma );
-	os_config_write_string( NULL, NOX("Gamma"), tmp_gamma_string );
-}
-
 #ifdef FS2_VOICER
 // This is really awful but thank the guys of X11 for naming something "Window"
 #	include "SDL_syswm.h" // For SDL_SysWMinfo
@@ -1827,7 +1796,7 @@ void game_init()
 		// Standalone mode doesn't require graphics operations
 		sdlGraphicsOperations.reset(new SDLGraphicsOperations());
 	}
-	if ( gr_init(std::move(sdlGraphicsOperations)) == false ) {
+	if (!gr_init(std::move(sdlGraphicsOperations))) {
 		os::dialogs::Message(os::dialogs::MESSAGEBOX_ERROR, "Error intializing graphics!");
 		exit(1);
 		return;
@@ -1865,11 +1834,6 @@ void game_init()
 	}
 
 #endif
-
-	// D3D's gamma system now works differently. 1.0 is the default value
-	ptr = os_config_read_string(NULL, NOX("GammaD3D"), NOX("1.0"));
-	FreeSpace_gamma = (float)atof(ptr);
-
 	script_init();			//WMC
 
 	font::init();					// loads up all fonts
@@ -1878,7 +1842,6 @@ void game_init()
 	if(!Is_standalone){
 		// #Kazan# - moved this down - WATCH THESE calls - anything that shares code between standalone and normal
 		// cannot make gr_* calls in standalone mode because all gr_ calls are NULL pointers
-		gr_set_gamma(FreeSpace_gamma);
 		game_title_screen_display();
 	}
 	

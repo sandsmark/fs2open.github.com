@@ -198,7 +198,6 @@ int Framerate_delay;
 void game_start_time(){}
 void game_stop_time(){}
 int game_get_default_skill_level(){return 0;}
-float FreeSpace_gamma;
 int set_cdrom_path(int){return 0;}
 int find_freespace_cd(char*){return 0;}
 void game_do_state_common(int, int){}

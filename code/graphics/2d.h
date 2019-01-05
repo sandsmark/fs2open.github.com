@@ -714,9 +714,6 @@ typedef struct screen {
 	// Frees up a saved screen.
 	void (*gf_free_screen)(int id);
 
-	// Sets the gamma
-	void (*gf_set_gamma)(float gamma);
-
 	// grab a region of the screen. assumes data is large enough
 	void (*gf_get_region)(int front, int w, int h, ubyte *data);
 
@@ -949,8 +946,6 @@ void gr_shield_icon(coord2d coords[6], const int resize_mode = GR_RESIZE_FULL);
 #define gr_save_screen		GR_CALL(gr_screen.gf_save_screen)
 #define gr_restore_screen	GR_CALL(gr_screen.gf_restore_screen)
 #define gr_free_screen		GR_CALL(gr_screen.gf_free_screen)
-
-#define gr_set_gamma			GR_CALL(gr_screen.gf_set_gamma)
 
 #define gr_get_region		GR_CALL(gr_screen.gf_get_region)
 
@@ -1279,6 +1274,9 @@ void gr_heap_allocate(GpuHeap heap_type, size_t size, void* data, size_t& offset
  * @param data_offset The offset at which the data is stored.
  */
 void gr_heap_deallocate(GpuHeap heap_type, size_t data_offset);
+
+
+void gr_set_gamma(float gamma);
 
 // Include this last to make the 2D rendering function available everywhere
 #include "graphics/render.h"
