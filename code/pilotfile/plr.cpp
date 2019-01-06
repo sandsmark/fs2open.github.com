@@ -631,27 +631,41 @@ void pilotfile::plr_read_settings()
 		Mouse_sensitivity  = handler->readInt("mouse_sensitivity");
 		Joy_sensitivity    = handler->readInt("joy_sensitivity");
 		Joy_dead_zone_size = handler->readInt("joy_dead_zone_size");
+
+		// detail
+		Detail.setting           = handler->readInt("setting");
+		Detail.nebula_detail     = handler->readInt("nebula_detail");
+		Detail.detail_distance   = handler->readInt("detail_distance");
+		Detail.hardware_textures = handler->readInt("hardware_textures");
+		Detail.num_small_debris  = handler->readInt("num_small_debris");
+		Detail.num_particles     = handler->readInt("num_particles");
+		Detail.num_stars         = handler->readInt("num_stars");
+		Detail.shield_effects    = handler->readInt("shield_effects");
+		Detail.lighting          = handler->readInt("lighting");
+		Detail.targetview_model  = handler->readInt("targetview_model");
+		Detail.planets_suns      = handler->readInt("planets_suns");
+		Detail.weapon_extras     = handler->readInt("weapon_extras");
 	} else {
 		// The values are set by the in-game menu but we still need to read the int from the file to maintain the correct offset
 		handler->readInt("use_mouse_to_fly");
 		handler->readInt("mouse_sensitivity");
 		handler->readInt("joy_sensitivity");
 		handler->readInt("joy_dead_zone_size");
-	}
 
-	// detail
-	Detail.setting = handler->readInt("setting");
-	Detail.nebula_detail = handler->readInt("nebula_detail");
-	Detail.detail_distance = handler->readInt("detail_distance");
-	Detail.hardware_textures = handler->readInt("hardware_textures");
-	Detail.num_small_debris = handler->readInt("num_small_debris");
-	Detail.num_particles = handler->readInt("num_particles");
-	Detail.num_stars = handler->readInt("num_stars");
-	Detail.shield_effects = handler->readInt("shield_effects");
-	Detail.lighting = handler->readInt("lighting");
-	Detail.targetview_model = handler->readInt("targetview_model");
-	Detail.planets_suns = handler->readInt("planets_suns");
-	Detail.weapon_extras = handler->readInt("weapon_extras");
+		// detail
+		handler->readInt("setting");
+		handler->readInt("nebula_detail");
+		handler->readInt("detail_distance");
+		handler->readInt("hardware_textures");
+		handler->readInt("num_small_debris");
+		handler->readInt("num_particles");
+		handler->readInt("num_stars");
+		handler->readInt("shield_effects");
+		handler->readInt("lighting");
+		handler->readInt("targetview_model");
+		handler->readInt("planets_suns");
+		handler->readInt("weapon_extras");
+	}
 }
 
 void pilotfile::plr_write_settings()
