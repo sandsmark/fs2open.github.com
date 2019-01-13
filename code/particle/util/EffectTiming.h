@@ -37,21 +37,29 @@ class EffectTiming {
 	Duration m_duration;
 	::util::UniformFloatRange m_delayRange;
 	::util::UniformFloatRange m_durationRange;
+
+	float m_particlesPerSecond = -1.f;
  public:
+	struct TimingState {
+		bool initial = true;
+	};
+
 	EffectTiming();
 
 	/**
      * @brief Applies the timing information to a specific source
      * @param source The source to be modified
      */
-	void applyToSource(ParticleSource* source);
+	void applyToSource(ParticleSource* source) const;
 
 	/**
      * @brief Determines if processing should continue
      * @param source The source which should be checked
      * @return @c true if processing should contine, @c false otherwise
      */
-	bool continueProcessing(const ParticleSource* source);
+	bool continueProcessing(const ParticleSource* source) const;
+
+	bool shouldCreateEffect(ParticleSource* source, TimingState& localState) const;
 
 	/**
      * @brief Parses an effect timing class

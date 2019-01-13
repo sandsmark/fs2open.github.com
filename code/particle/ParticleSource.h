@@ -196,6 +196,7 @@ class SourceOrientation {
 class SourceTiming {
  private:
 	int m_creationTimestamp;
+	int m_nextCreation; //! The next time the source should generate a particle. Controlled by the effect of the source.
 
 	int m_beginTimestamp;
 	int m_endTimestamp;
@@ -237,6 +238,10 @@ class SourceTiming {
 	 * @return The progress of the source through its lifetime
 	 */
 	float getLifeTimeProgress() const;
+
+	bool nextCreationTimeExpired() const;
+
+	void incrementNextCreationTime(int time_diff);
 
 	friend class ParticleSource;
 };
