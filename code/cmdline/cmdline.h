@@ -74,6 +74,8 @@ extern int Cmdline_postprocess;
 extern int Cmdline_bloom_intensity;
 extern bool Cmdline_fxaa;
 extern int Cmdline_fxaa_preset;
+extern bool Cmdline_smaa;
+extern int Cmdline_smaa_preset;
 extern bool Cmdline_fb_explosions;
 extern bool Cmdline_fb_thrusters;
 extern int Cmdline_shadow_quality;

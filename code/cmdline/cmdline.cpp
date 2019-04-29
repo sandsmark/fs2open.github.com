@@ -82,8 +82,8 @@ public:
 	int name_found;				// true if parameter on command line, otherwise false
 	const int arg_type;					// from enum cmdline_arg_type; used for help
 
-	cmdline_parm(const char *name, const char *help, const int arg_type, const bool stacks = false);
-	~cmdline_parm();
+	cmdline_parm(const char *name, const char *help, const int arg_type, const bool stacks = false) noexcept;
+	~cmdline_parm() noexcept;
 	int found();
 	int get_int();
 	float get_float();
@@ -167,6 +167,7 @@ Flag exe_params[] =
 	{ "-post_process",		"Enable post processing",					true,	EASY_ALL_ON,		EASY_DEFAULT,		"Graphics",		"http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-post_process" },
 	{ "-soft_particles",	"Enable soft particles",					true,	EASY_ALL_ON,		EASY_DEFAULT,		"Graphics",		"http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-soft_particles" },
 	{ "-fxaa",				"Enable FXAA anti-aliasing",				true,	EASY_MEM_ALL_ON,	EASY_DEFAULT,		"Graphics",		"http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-fxaa" },
+	{ "-smaa",				"Enable SMAA anti-aliasing",				true,	EASY_MEM_ALL_ON,	EASY_DEFAULT,		"Graphics",		"http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-smaa" },
 	{ "-nolightshafts",		"Disable lightshafts",						true,	EASY_DEFAULT,		EASY_DEFAULT,		"Graphics",		"http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-flightshaftsoff"},
 	{ "-fb_explosions",		"Enable Framebuffer Shockwaves",			true,	EASY_ALL_ON,		EASY_DEFAULT,		"Graphics",		"http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-fb_explosions", },
     { "-fb_thrusters",      "Enable Framebuffer Thrusters",             true,   EASY_ALL_ON,        EASY_DEFAULT,       "Graphics",     "http://www.hard-light.net/wiki/index.php/Command-Line_Reference#-fb_thrusters", },
@@ -322,6 +323,8 @@ cmdline_parm postprocess_arg("-post_process", NULL, AT_NONE);
 cmdline_parm bloom_intensity_arg("-bloom_intensity", "Set bloom intensity, requires -post_process", AT_INT);
 cmdline_parm fxaa_arg("-fxaa", NULL, AT_NONE);
 cmdline_parm fxaa_preset_arg("-fxaa_preset", "FXAA quality (0-9), requires -post_process and -fxaa", AT_INT);
+cmdline_parm smaa_arg("-smaa", NULL, AT_NONE);
+cmdline_parm smaa_preset_arg("-smaa_preset", "SMAA quality (0-9), requires -post_process and -smaa", AT_INT);
 cmdline_parm fb_explosions_arg("-fb_explosions", NULL, AT_NONE);
 cmdline_parm fb_thrusters_arg("-fb_thrusters", NULL, AT_NONE);
 cmdline_parm flightshaftsoff_arg("-nolightshafts", NULL, AT_NONE);
@@ -349,6 +352,8 @@ int Cmdline_postprocess = 0;
 int Cmdline_bloom_intensity = 75;
 bool Cmdline_fxaa = false;
 int Cmdline_fxaa_preset = 6;
+bool Cmdline_smaa = false;
+int Cmdline_smaa_preset = 1; // Medium seems like a good default
 extern int Fxaa_preset_last_frame;
 bool Cmdline_fb_explosions = 0;
 bool Cmdline_fb_thrusters = false;
@@ -1040,7 +1045,7 @@ void os_init_cmdline(int argc, char *argv[])
  * @param arg_type_    parameters arguement type (if any)
  * @param stacks_    can the parameter be stacked
  */
-cmdline_parm::cmdline_parm(const char *name_, const char *help_, const int arg_type_, const bool stacks_):
+cmdline_parm::cmdline_parm(const char *name_, const char *help_, const int arg_type_, const bool stacks_) noexcept:
 	name(name_), help(help_), stacks(stacks_), arg_type(arg_type_)
 {
 	args = NULL;
@@ -1063,7 +1068,7 @@ cmdline_parm::cmdline_parm(const char *name_, const char *help_, const int arg_t
 
 
 // destructor - frees any allocated memory
-cmdline_parm::~cmdline_parm()
+cmdline_parm::~cmdline_parm() noexcept
 {
 #ifndef FRED
 	if (args) {
@@ -1868,6 +1873,14 @@ bool SetCmdlineParams()
 		}
 
 		Fxaa_preset_last_frame = Cmdline_fxaa_preset;
+	}
+
+	if (smaa_arg.found()) {
+		Cmdline_smaa = true;
+
+		if (smaa_preset_arg.found()) {
+			Cmdline_smaa_preset = smaa_preset_arg.get_int();
+		}
 	}
 
 	if ( glow_arg.found() )

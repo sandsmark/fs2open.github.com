@@ -534,7 +534,7 @@ void gr_opengl_scene_texture_end()
 	}
 
 	if ( Cmdline_postprocess && !PostProcessing_override ) {
-		gr_post_process_end();
+		gr_opengl_post_process_end();
 	} else {
 		GR_DEBUG_SCOPE("Draw scene texture");
 		TRACE_SCOPE(tracing::DrawSceneTexture);
@@ -551,7 +551,7 @@ void gr_opengl_scene_texture_end()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		opengl_shader_set_passthrough(true);
+		opengl_shader_set_passthrough(true, High_dynamic_range);
 
 		GL_state.Array.BindArrayBuffer(0);
 
@@ -650,7 +650,7 @@ void gr_opengl_update_distortion()
 	GLboolean blend = GL_state.Blend(GL_FALSE);
 	GLboolean cull = GL_state.CullFace(GL_FALSE);
 
-	opengl_shader_set_passthrough(true);
+	opengl_shader_set_passthrough(true, High_dynamic_range);
 
 	GL_state.PushFramebufferState();
 	GL_state.BindFrameBuffer(Distortion_framebuffer);
@@ -695,7 +695,7 @@ void gr_opengl_update_distortion()
 
 	opengl_render_primitives_immediate(PRIM_TYPE_TRISTRIP, &vert_def, 4, vertices, sizeof(vertex) * 4);
 
-	opengl_shader_set_passthrough(false);
+	opengl_shader_set_passthrough(false, High_dynamic_range);
 
 	vertex distortion_verts[33];
 
